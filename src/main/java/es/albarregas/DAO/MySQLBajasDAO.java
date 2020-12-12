@@ -26,7 +26,7 @@ public class MySQLBajasDAO implements IBajasDAO {
 
     @Override
     public List<Bajas> setBajas(Bajas baja) {
-        String sql = "INSERT INTO Baja (DIB, fechaBaja, causa, destino) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO baja (DIB, fechaBaja, causa, destino) VALUES (?, ?, ?, ?)";
         
         ArrayList<Bajas> lista = new ArrayList<>();
         Connection conexion = null;
@@ -61,7 +61,7 @@ public class MySQLBajasDAO implements IBajasDAO {
 
    @Override
     public List<Bajas> getBajas(String REGA) {
-        String sql = "SELECT * FROM Baja, explotacion WHERE REGA LIKE ? ";
+        String sql = "SELECT * FROM baja, explotacion WHERE REGA LIKE ? ";
         Bajas baja;
         ArrayList<Bajas> lista = new ArrayList<>();
         Connection conexion = null;
@@ -76,8 +76,8 @@ public class MySQLBajasDAO implements IBajasDAO {
                 
                 baja.setDIB(resultado.getString("DIB"));
                 baja.setFechaBaja(resultado.getString("fechaBaja"));
-                baja.setCausa(resultado.getString("Causa"));
-                baja.setDestino(resultado.getString("Destino"));
+                baja.setCausa(resultado.getString("causa"));
+                baja.setDestino(resultado.getString("destino"));
                 
                 lista.add(baja);
             }
@@ -100,7 +100,7 @@ public class MySQLBajasDAO implements IBajasDAO {
     
     @Override
     public Bajas getBaja(String DIB) {
-        String sql = "SELECT * FROM Baja WHERE DIB LIKE ?";
+        String sql = "SELECT * FROM baja WHERE DIB LIKE ?";
         Bajas baja = null;
         ArrayList<Bajas> lista = new ArrayList<>();
         Connection conexion = null;
@@ -115,8 +115,8 @@ public class MySQLBajasDAO implements IBajasDAO {
                 
                 baja.setDIB(DIB);
                 baja.setFechaBaja(resultado.getString("fechaBaja"));
-                baja.setCausa(resultado.getString("Causa"));
-                baja.setDestino(resultado.getString("Destino"));
+                baja.setCausa(resultado.getString("causa"));
+                baja.setDestino(resultado.getString("destino"));
                 
                 lista.add(baja);
             }
@@ -139,7 +139,7 @@ public class MySQLBajasDAO implements IBajasDAO {
 
     @Override
     public void updateBajas(Bajas baja) {
-        String sql = "UPDATE Baja SET fechaBaja = ?, causa = ?, destino = ? WHERE DIB = ?";
+        String sql = "UPDATE baja SET fechaBaja = ?, causa = ?, destino = ? WHERE DIB = ?";
 
         Connection conexion = null;
         try {
@@ -170,7 +170,7 @@ public class MySQLBajasDAO implements IBajasDAO {
 
     @Override
     public void deleteBajas(String DIB) {
-        String sql = "DELETE FROM Baja WHERE DIB = ?";
+        String sql = "DELETE FROM baja WHERE DIB = ?";
         Connection conexion = null;
         try {
             conexion = getMySQLConnection();

@@ -26,5 +26,5 @@ public interface IExplotacionesDAO {
     
     public void updateExplotacion(Explotaciones explo);
     
-    public void deleteExplotacion(String REGA);
+    public String deleteExplotacion(String REGA);
 }

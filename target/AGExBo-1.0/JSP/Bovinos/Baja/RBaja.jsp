@@ -61,15 +61,15 @@
                                                     <th scope="col">Sexo</th>
                                                     <th scope="col">DIB madre</th>
                                                     <th scope="col">Fecha alta</th>
-                                                    <th scope="col">¿Es un ternero?</th>
+                                                    <th scope="col">Motivo de la baja</th>
                                                     <th scope="col">Modificar, eliminar, dar de baja y destino</th>
                                                  </tr>
                                             </thead>
                                             <tbody>
                                         <c:set var="bovinos" value="${bovinos}"></c:set>  
-                                        <c:set var="bajas" value="${bajas}"></c:set>        
+                                        <c:set var="bajas" value="${bajas}"></c:set> 
+                                        <c:set var="destinos" value="${desti}"></c:set>          
                                         <c:if test="${bovinos != null}">
-                                        <c:if test="${bajas != null}">
                                             <c:forEach var="b" items="${bovinos}">
                                                 <c:set var = "DIB" value = "${b.DIB}" />
                                                 <c:set var = "nacimiento" value = "${b.nacimiento}" />
@@ -81,16 +81,38 @@
                                                 <c:set var = "Ternero" value = "${b.ternero}" />
                                                 <c:set var = "exploNaci" value = "${b.exploNaci}" /> 
                                                     
+                                                <!--Comprobaciones-->
                                                 <c:set var = "baja" value = "" />
-                                                <c:forEach var="ba" items="${bajas}">
-                                                    <c:set var = "DIBBA" value = "${ba.DIB}" />
-                                                    <c:if test="${DIB == DIBBA}">
-                                                        <c:set var = "baja" value = "(Baja en la explotación)" />
-                                                        <c:set var = "fechaBaja" value = "${ba.fechaBaja}" />
+                                                <c:if test="${bajas != null}">
+                                                    <c:forEach var="ba" items="${bajas}">
+                                                        <c:set var = "DIBBA" value = "${ba.DIB}" />
+                                                        <c:if test="${DIB == DIBBA}">
+                                                            <c:set var = "baja" value = "(Baja en la explotación)" />
+                                                            <c:set var = "fechaBaja" value = "${ba.fechaBaja}" />
                                                         <c:set var = "causa" value = "${ba.causa}" />
                                                         <c:set var = "destino" value = "${ba.destino}" /> 
-                                                    </c:if>
-                                                </c:forEach>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:if>
+                                                
+                                                <c:set var = "desti" value = "" />
+                                                <c:if test="${destinos != null}">
+                                                    <c:forEach var="d" items="${destinos}">
+                                                        <c:set var = "DIBDE" value = "${d.DIB}" />
+                                                        <c:set var = "destinoExplo" value = "(${d.destinoExplo})" />
+                                                        <c:if test="${DIB == DIBDE}">
+                                                            <c:set var = "desti" value = "${destinoExplo}" />
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:if>
+                                                
+                                                <c:set var = "year" value = "${fn:substringBefore(nacimiento, '-')}" />
+                                                    <fmt:parseNumber var = "aE" type = "number" value = "${year}" />
+                                                <c:set var = "rest" value = "${fn:substringAfter(nacimiento, '-')}" />
+                                                    <c:set var = "mes" value = "${fn:substringBefore(rest, '-')}" /> 
+                                                        <fmt:parseNumber var = "mE" type = "number" value = "${mes}" />
+                                                    <c:set var = "dia" value = "${fn:substringAfter(rest, '-')}" />
+                                                        <fmt:parseNumber var = "dE" type = "number" value = "${dia}" />
                                                 
                                                 <c:set var = "yearB" value = "${fn:substringBefore(fechaBaja, '-')}" />
                                                     <fmt:parseNumber var = "aB" type = "number" value = "${yearB}" />
@@ -99,10 +121,26 @@
                                                         <fmt:parseNumber var = "mB" type = "number" value = "${mesB}" />
                                                     <c:set var = "diaB" value = "${fn:substringAfter(restB, '-')}" />
                                                         <fmt:parseNumber var = "dB" type = "number" value = "${diaB}" />
+                                                         
+                                                <c:set var = "edadA" value = "${aA - aE}" />
+                                                <c:set var = "edadM" value = "${mA - mE}" />
+                                                <c:set var = "edadD" value = "${dA - dE}" />
                                                 
                                                 <c:set var = "edadAB" value = "${aB - aE}" />
                                                 <c:set var = "edadMB" value = "${mB - mE}" />
                                                 <c:set var = "edadDB" value = "${dB - dE}" />
+                                                
+                                                <c:if test="${edadA < 0}">
+                                                    <c:set var = "edadA" value = "0" />
+                                                </c:if>
+                                                
+                                                <c:if test="${edadM < 0}">
+                                                    <c:set var = "edadM" value = "0" />
+                                                </c:if>
+                                                
+                                                <c:if test="${edadD < 0}">
+                                                    <c:set var = "edadD" value = "0" />
+                                                </c:if>
                                                 
                                                 <c:if test="${edadAB < 0}">
                                                     <c:set var = "edadAB" value = "0" />
@@ -117,22 +155,52 @@
                                                 </c:if>
                                                         
                                                         <c:if test="${baja == '(Baja en la explotación)'}">
+                                                            
                                                             <tr>
-                                                                <th scope="col">${DIB}<br>${baja}</th>
-                                                                <th scope="col">${nacimiento} <bR>${edadAB} años<bR>${edadMB} meses<bR>${edadDB} dias</th>
+                                                                <th scope="col">
+                                                                    ${DIB}<br>
+                                                                    <a href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=VerBajas&usuario=${user}&passwd=${pass}&rega=${rega}">
+                                                                        ${baja}
+                                                                    </a>
+                                                                    <c:choose>
+                                                                        <c:when test="${desti == '(Reposicion)'}">
+                                                                            <c:if test="${baja == '(Baja en la explotación)'}">
+                                                                                <br><br>
+                                                                            </c:if>
+                                                                            <a href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=VerReposicion&usuario=${user}&passwd=${pass}&rega=${rega}">
+                                                                                ${desti}
+                                                                            </a> 
+                                                                        </c:when>
+                                                                        <c:when test="${desti == '(Cebadero)'}">
+                                                                            <c:if test="${baja == '(Baja en la explotación)'}">
+                                                                                <br><br>
+                                                                            </c:if>
+                                                                             <a href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=VerCebadero&usuario=${user}&passwd=${pass}&rega=${rega}">
+                                                                                ${desti}
+                                                                            </a>
+                                                                        </c:when>
+                                                                    </c:choose>
+                                                                </th>
+                                                                <th scope="col">
+                                                                    ${nacimiento}
+                                                                    <c:choose>
+                                                                        <c:when test="${baja != '(Baja en la explotación)'}">
+                                                                            <bR>${edadA} años<bR>${edadM} meses<bR>${edadD} dias
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <bR>${edadAB} años<bR>${edadMB} meses<bR>${edadDB} dias
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </th>
                                                                 <th scope="col">${paisOrigen}<br>${exploNaci}</th>
                                                                 <th scope="col">${raza}</th>
                                                                 <th scope="col">${sexo}</th>
                                                                 <th scope="col">${DIBMadre}</th>
                                                                 <th scope="col">
-                                                                    <span class="green">
-                                                                        <u>Alta:</u>
-                                                                    </span>
-                                                                    <bR>${fechaAlta}<br>
-                                                                    <span class="red">
-                                                                        <u>Baja:</u>
-                                                                    </span>
-                                                                    <bR>${fechaBaja}
+                                                                    <span class="greenT"><u>Alta:</u></span><bR>${fechaAlta}<br>
+                                                                    <c:if test="${baja == '(Baja en la explotación)'}">
+                                                                        <span class="redT"><u>Baja:</u></span><bR>${fechaBaja}
+                                                                    </c:if>
                                                                 </th>
                                                                 <th scope="col">${causa} 
                                                                     <c:if test="${destino != ''}">
@@ -140,27 +208,70 @@
                                                                     </c:if>
                                                                 </th>
                                                                 <th scope="col">
-                                                                    <a class="yellow" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=UBajas&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}">
-                                                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path fill-rule="evenodd" d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
-                                                                        </svg> 
-                                                                    </a>
-                                                                    <a class="green" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=DBajas&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}&alta=si">
-                                                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-up-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
-                                                                        </svg>
-                                                                    </a>
-                                                                    <a class="red" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=DBajas&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}&alta=no">
-                                                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
-                                                                        </svg>
-                                                                    </a>
+                                                                    <c:choose>
+                                                                        <c:when test="${baja != '(Baja en la explotación)'}">
+                                                                        <a class="yellow" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=UpdateBovino&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}">
+                                                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path fill-rule="evenodd" d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                                                            </svg> 
+                                                                        </a>
+                                                                        <c:choose>
+                                                                            <c:when test="${desti == '(Reposicion)' || desti == '(Cebadero)'}">
+                                                                            <a class="red" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=DeleteDestino&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}">
+                                                                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
+                                                                                </svg>
+                                                                            </a>  
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                            <a class="red" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=DeleteBovino&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}">
+                                                                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
+                                                                                </svg>
+                                                                            </a>  
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                        <a class="red" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=BajaBovino&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}">
+                                                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-down-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                                <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+                                                                             </svg>
+                                                                        </a>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                        <a class="yellow" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=UBajas&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}">
+                                                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path fill-rule="evenodd" d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                                                            </svg> 
+                                                                        </a>
+                                                                        <c:choose>
+                                                                            <c:when test="${desti == '(Reposicion)' || desti == '(Cebadero)'}">
+                                                                            <a class="red" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=DeleteDestinoYBaja&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}">
+                                                                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
+                                                                                </svg>
+                                                                            </a>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                            <a class="red" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=DBajas&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}&alta=no">
+                                                                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
+                                                                                </svg>
+                                                                            </a>  
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                        <a class="green" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=DBajas&DIB=${DIB}&user=${user}&pass=${pass}&rega=${rega}&alta=si">
+                                                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-up-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                                <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+                                                                             </svg>
+                                                                        </a>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 </th>
                                                             </tr>
                                                         </c:if>
                                                 </c:forEach>
-                                            </c:if>
                                         </c:if>
                                             </tbody>
                                         </table>

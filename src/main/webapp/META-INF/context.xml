@@ -6,9 +6,9 @@
         maxActive="100" 
         maxIdle="30" 
         maxWait="10000" 
-        name="jdbc/AGexBo" 
+        name="jdbc/agexbo" 
         password="1234" 
         type="javax.sql.DataSource" 
-        url="jdbc:mysql://localhost:3306/AGExBo" 
+        url="jdbc:mysql://localhost:3306/agexbo" 
         username="agexbo"/>
 </Context>

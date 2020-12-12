@@ -25,7 +25,7 @@ public class MySQLBovinoDAO implements IBovinoDAO {
 
     @Override
     public List<Bovinos> setBovinos(Bovinos bovino) {
-        String sql = "INSERT INTO Bovino (DIB, REGA, nacimiento, paisOrigen, raza, sexo, DIBMadre, fechaAlta, ternero, exploNaci) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bovino (DIB, REGA, nacimiento, paisOrigen, raza, sexo, DIBMadre, fechaAlta, ternero, exploNaci) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         ArrayList<Bovinos> lista = new ArrayList<>();
         Connection conexion = null;
@@ -66,7 +66,7 @@ public class MySQLBovinoDAO implements IBovinoDAO {
 
     @Override
     public Bovinos getBovino(String DIB) {
-        String sql = "SELECT * FROM Bovino WHERE DIB LIKE ?";
+        String sql = "SELECT * FROM bovino WHERE DIB LIKE ?";
         Bovinos bovino = null;
         ArrayList<Bovinos> lista = new ArrayList<>();
         Connection conexion = null;
@@ -81,13 +81,13 @@ public class MySQLBovinoDAO implements IBovinoDAO {
                 
                 bovino.setDIB(DIB);
                 bovino.setREGA(resultado.getString("REGA"));
-                bovino.setNacimiento(resultado.getString("Nacimiento"));
-                bovino.setPaisOrigen(resultado.getString("PaisOrigen"));
-                bovino.setRaza(resultado.getString("Raza"));
-                bovino.setSexo(resultado.getString("Sexo"));
+                bovino.setNacimiento(resultado.getString("nacimiento"));
+                bovino.setPaisOrigen(resultado.getString("paisOrigen"));
+                bovino.setRaza(resultado.getString("raza"));
+                bovino.setSexo(resultado.getString("sexo"));
                 bovino.setDIBMadre(resultado.getString("DIBMadre"));
-                bovino.setFechaAlta(resultado.getString("FechaAlta"));
-                bovino.setTernero(resultado.getString("Ternero"));
+                bovino.setFechaAlta(resultado.getString("fechaAlta"));
+                bovino.setTernero(resultado.getString("ternero"));
                 bovino.setExploNaci(resultado.getString("exploNaci"));
                 
                 lista.add(bovino);
@@ -111,7 +111,7 @@ public class MySQLBovinoDAO implements IBovinoDAO {
     
     @Override
     public List<Bovinos> getBovinos(String REGA) {
-        String sql = "SELECT * FROM Bovino WHERE REGA LIKE ? ORDER BY Nacimiento DESC";
+        String sql = "SELECT * FROM bovino WHERE REGA LIKE ? ORDER BY nacimiento DESC";
         Bovinos bovino = null;
         ArrayList<Bovinos> lista = new ArrayList<>();
         Connection conexion = null;
@@ -126,13 +126,13 @@ public class MySQLBovinoDAO implements IBovinoDAO {
                 
                 bovino.setDIB(resultado.getString("DIB"));
                 bovino.setREGA(REGA);
-                bovino.setNacimiento(resultado.getString("Nacimiento"));
-                bovino.setPaisOrigen(resultado.getString("PaisOrigen"));
-                bovino.setRaza(resultado.getString("Raza"));
-                bovino.setSexo(resultado.getString("Sexo"));
+                bovino.setNacimiento(resultado.getString("nacimiento"));
+                bovino.setPaisOrigen(resultado.getString("paisOrigen"));
+                bovino.setRaza(resultado.getString("raza"));
+                bovino.setSexo(resultado.getString("sexo"));
                 bovino.setDIBMadre(resultado.getString("DIBMadre"));
-                bovino.setFechaAlta(resultado.getString("FechaAlta"));
-                bovino.setTernero(resultado.getString("Ternero"));
+                bovino.setFechaAlta(resultado.getString("fechaAlta"));
+                bovino.setTernero(resultado.getString("ternero"));
                 bovino.setExploNaci(resultado.getString("exploNaci"));
                 
                 lista.add(bovino);
@@ -156,7 +156,7 @@ public class MySQLBovinoDAO implements IBovinoDAO {
 
     @Override
     public List<Bovinos> getBovinosT(String REGA) {
-        String sql = "SELECT * FROM Bovino WHERE REGA LIKE ? AND Ternero LIKE 'Si' ORDER BY Nacimiento DESC";
+        String sql = "SELECT * FROM bovino WHERE REGA LIKE ? AND ternero LIKE 'Si' ORDER BY nacimiento DESC";
         Bovinos bovino = null;
         ArrayList<Bovinos> lista = new ArrayList<>();
         Connection conexion = null;
@@ -171,13 +171,13 @@ public class MySQLBovinoDAO implements IBovinoDAO {
                 
                 bovino.setDIB(resultado.getString("DIB"));
                 bovino.setREGA(REGA);
-                bovino.setNacimiento(resultado.getString("Nacimiento"));
-                bovino.setPaisOrigen(resultado.getString("PaisOrigen"));
-                bovino.setRaza(resultado.getString("Raza"));
-                bovino.setSexo(resultado.getString("Sexo"));
+                bovino.setNacimiento(resultado.getString("nacimiento"));
+                bovino.setPaisOrigen(resultado.getString("paisOrigen"));
+                bovino.setRaza(resultado.getString("raza"));
+                bovino.setSexo(resultado.getString("sexo"));
                 bovino.setDIBMadre(resultado.getString("DIBMadre"));
-                bovino.setFechaAlta(resultado.getString("FechaAlta"));
-                bovino.setTernero(resultado.getString("Ternero"));
+                bovino.setFechaAlta(resultado.getString("fechaAlta"));
+                bovino.setTernero(resultado.getString("ternero"));
                 bovino.setExploNaci(resultado.getString("exploNaci"));
                 
                 lista.add(bovino);
@@ -201,7 +201,7 @@ public class MySQLBovinoDAO implements IBovinoDAO {
     
     @Override
     public void updateBovinos(Bovinos bovino) {
-         String sql = "UPDATE Bovino SET REGA = ?, nacimiento = ?, paisOrigen = ?, raza = ?, sexo = ?, DIBMadre = ?, fechaAlta = ?, ternero = ?, exploNaci = ? WHERE DIB = ?";
+         String sql = "UPDATE bovino SET REGA = ?, nacimiento = ?, paisOrigen = ?, raza = ?, sexo = ?, DIBMadre = ?, fechaAlta = ?, ternero = ?, exploNaci = ? WHERE DIB = ?";
 
         Connection conexion = null;
         try {
@@ -238,7 +238,7 @@ public class MySQLBovinoDAO implements IBovinoDAO {
 
     @Override
     public void deleteBovinos(String DIB) {
-        String sql = "DELETE FROM Bovino WHERE DIB = ?";
+        String sql = "DELETE FROM bovino WHERE DIB = ?";
         Connection conexion = null;
         try {
             conexion = getMySQLConnection();

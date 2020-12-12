@@ -25,7 +25,7 @@ public class MySQLDestinoExplotacionesDAO implements IDestinoExplotacionesDAO{
 
     @Override
     public List<DestinosExplotaciones> setDestinosExplotacion(DestinosExplotaciones destiExplo) {
-        String sql = "INSERT INTO destinoexplotacion (DIB, destinoExplo) VALUES (?, ?)";
+        String sql = "INSERT INTO destinoExplotacion (DIB, destinoExplo) VALUES (?, ?)";
         
         ArrayList<DestinosExplotaciones> lista = new ArrayList<>();
         Connection conexion = null;
@@ -58,7 +58,7 @@ public class MySQLDestinoExplotacionesDAO implements IDestinoExplotacionesDAO{
 
     @Override
     public DestinosExplotaciones getDestinoExplotacion(String DIB) {
-        String sql = "SELECT * FROM destinoexplotacion WHERE DIB LIKE ?";
+        String sql = "SELECT * FROM destinoExplotacion WHERE DIB LIKE ?";
         DestinosExplotaciones destiExplo = null;
         Connection conexion = null;
         try {
@@ -92,7 +92,7 @@ public class MySQLDestinoExplotacionesDAO implements IDestinoExplotacionesDAO{
     
     @Override
     public List<DestinosExplotaciones> getDestinosExplotacion(String REGA) {
-        String sql = "SELECT * FROM destinoexplotacion, explotacion WHERE REGA LIKE ? ORDER BY Nacimiento DESC";
+        String sql = "SELECT * FROM destinoExplotacion, explotacion WHERE REGA LIKE ?";
         DestinosExplotaciones destiExplo = null;
         ArrayList<DestinosExplotaciones> lista = new ArrayList<>();
         Connection conexion = null;
@@ -129,7 +129,7 @@ public class MySQLDestinoExplotacionesDAO implements IDestinoExplotacionesDAO{
     
     @Override
     public List<DestinosExplotaciones> getDestinosCebaderos(String REGA) {
-        String sql = "SELECT * FROM destinoexplotacion, explotacion WHERE REGA LIKE ? AND DestinoExplo LIKE 'Cebadero'";
+        String sql = "SELECT * FROM destinoExplotacion, explotacion WHERE REGA LIKE ? AND destinoExplo LIKE 'Cebadero'";
         DestinosExplotaciones destiExplo;
         ArrayList<DestinosExplotaciones> lista = new ArrayList<>();
         Connection conexion = null;
@@ -166,7 +166,7 @@ public class MySQLDestinoExplotacionesDAO implements IDestinoExplotacionesDAO{
     
     @Override
     public List<DestinosExplotaciones> getDestinosReposiciones(String REGA) {
-        String sql = "SELECT * FROM destinoexplotacion, explotacion WHERE REGA LIKE ? AND DestinoExplo LIKE 'Reposicion'";
+        String sql = "SELECT * FROM destinoExplotacion, explotacion WHERE REGA LIKE ? AND destinoExplo LIKE 'Reposicion'";
         DestinosExplotaciones destiExplo;
         ArrayList<DestinosExplotaciones> lista = new ArrayList<>();
         Connection conexion = null;
@@ -203,7 +203,7 @@ public class MySQLDestinoExplotacionesDAO implements IDestinoExplotacionesDAO{
 
     @Override
     public void updateDestinosExplotacio(DestinosExplotaciones destiExplo) {
-         String sql = "UPDATE destinoexplotacion SET destinoExplo = ? WHERE DIB = ?";
+         String sql = "UPDATE destinoExplotacion SET destinoExplo = ? WHERE DIB = ?";
 
         Connection conexion = null;
         try {
@@ -232,7 +232,7 @@ public class MySQLDestinoExplotacionesDAO implements IDestinoExplotacionesDAO{
 
     @Override
     public void deleteDestinosExplotacio(String DIB) {
-        String sql = "DELETE FROM destinoexplotacion WHERE DIB = ?";
+        String sql = "DELETE FROM destinoExplotacion WHERE DIB = ?";
         Connection conexion = null;
         try {
             conexion = getMySQLConnection();

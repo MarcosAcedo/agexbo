@@ -26,7 +26,7 @@ public class ConnectionFactory {
     public static Connection getMySQLConnection() {
         try {
             Context contexto = new InitialContext();
-            dataSource = (DataSource) contexto.lookup("java:comp/env/jdbc/AGexBo");
+            dataSource = (DataSource) contexto.lookup("java:comp/env/jdbc/agexbo");
             conexion = dataSource.getConnection();
         } catch (NamingException | SQLException ex) {
             MyLogger.doLog(ex, ConnectionFactory.class, "fatal");

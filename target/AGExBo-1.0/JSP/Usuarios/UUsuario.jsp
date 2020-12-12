@@ -99,7 +99,7 @@
                                     <br>
                                     <button type="submit" class="btn btn-outline-success" name="enviar" id="enviar" value="ModificarUsuario" onclick="validacion()">Guardar usuario</button> 
                                     <c:choose>
-                                        <c:when test="${validado == 'Si'}">
+                                        <c:when test="${validado == 'si'}">
                                             <a class="btn btn-success" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=Volver&user=${usuario}&pass=${passwd}">Volver</a>
                                         </c:when>
                                         <c:otherwise>

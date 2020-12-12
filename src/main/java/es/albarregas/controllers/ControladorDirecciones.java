@@ -57,7 +57,7 @@ public class ControladorDirecciones extends HttpServlet {
                 dib, destinoExplo, 
                 paisOrigen, raza, sexo, dibMadre, ternero, exploNaci,
                 causa, destino, alta,
-                nacimientoS, fechaAltaS, fechaBajaS;
+                nacimientoS, fechaAltaS, fechaBajaS, error;
         int dia, mes, anyo;
         Calendar rightNow = Calendar.getInstance();
         
@@ -604,11 +604,15 @@ public class ControladorDirecciones extends HttpServlet {
                     request.setAttribute("user", listaU);
                     
                     rega = request.getParameter("rega");
-                    exploDAO.deleteExplotacion(rega);
+                    error = exploDAO.deleteExplotacion(rega);
 
                     listaE = method.listaExplo(usu.getRol(), usu.getUsuarios());
                     request.setAttribute("explo", listaE);
 
+                    if(error.equals("Primero debes eliminar todos los bovinos de la explotacion")){
+                        request.setAttribute("errorREGA", error);
+                    }
+                    
                     url = "JSP/Usuarios/inicioAdmin.jsp";
                     break;
                     
@@ -829,7 +833,7 @@ public class ControladorDirecciones extends HttpServlet {
                             paisOrigen = request.getParameter("paisOrigen");
                             raza = request.getParameter("raza");
                             sexo = request.getParameter("sexo");
-                            dibMadre = request.getParameter("dibMadre");
+                            dibMadre = request.getParameter("dibMadre").toUpperCase();
                             dia = rightNow.get(Calendar.DAY_OF_MONTH);
                             mes = rightNow.get(Calendar.MONTH) + 1;
                             anyo = rightNow.get(Calendar.YEAR);
@@ -895,7 +899,7 @@ public class ControladorDirecciones extends HttpServlet {
                             paisOrigen = request.getParameter("paisOrigen");
                             raza = request.getParameter("raza");
                             sexo = request.getParameter("sexo");
-                            dibMadre = request.getParameter("dibMadre");
+                            dibMadre = request.getParameter("dibMadre").toUpperCase();
                             dia = rightNow.get(Calendar.DAY_OF_MONTH);
                             mes = rightNow.get(Calendar.MONTH) + 1;
                             anyo = rightNow.get(Calendar.YEAR);
@@ -1192,6 +1196,9 @@ public class ControladorDirecciones extends HttpServlet {
 
                     listaBa = bjsDAO.getBajas(rega);
                     request.setAttribute("bajas", listaBa);
+
+                    listaDE = destiExploDAO.getDestinosExplotacion(rega);
+                    request.setAttribute("desti", listaDE);
 
                     url = "JSP/Bovinos/Baja/RBaja.jsp";
                 }

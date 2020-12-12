@@ -83,6 +83,7 @@
                                             <button type="submit" class="btn btn-success" name="enviar" id="enviar" value="VerBajas">Ver bajas</button>
                                             <button type="submit" class="btn btn-success" name="enviar" id="enviar" value="VerReposicion">Ver reposicion</button>
                                             <button type="submit" class="btn btn-success" name="enviar" id="enviar" value="VerCebadero">Ver cebadero</button>
+                                            <button type="submit" class="btn btn-success" name="enviar" id="enviar" value="ListadoTerneros">Ver terneros</button>
                                         </div>
                                     <a class="btn btn-outline-success" href="<%= request.getContextPath() %>/ControladorDirecciones?enviar=CerrarSesion">Cerrar sesion</a>
                                 </div>

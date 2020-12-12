@@ -29,6 +29,7 @@
             <c:set var = "DIBMadre" value = "${b.DIBMadre}" />
             <c:set var = "fechaAlta" value = "${b.fechaAlta}" />
             <c:set var = "Ternero" value = "${b.ternero}" />
+            <c:set var = "exploNaci" value = "${b.exploNaci}" />
         </c:if>
         
         <c:set var="ba" value="${baja}"></c:set>     
@@ -117,6 +118,10 @@
                                                     <input type="radio" name="Ternero" id="Ternero" value="No" required checked>&nbsp;No
                                                 </c:otherwise>
                                             </c:choose>
+                                        </div>
+                                    <h2 class="h2index">Explotacion nacimiento</h2>
+                                        <div class="capaInt">    
+                                            <input type="text" class="form-control" name="exploNaci" id="exploNaci" maxlength="14" minlength="14" value="${exploNaci}" pattern="[A-Z]{2}[0-9]{12}" required>
                                         </div>
                                     <h2 class="h2index">Causa de la baja en la explotación</h2>
                                         <div class="capaInt">

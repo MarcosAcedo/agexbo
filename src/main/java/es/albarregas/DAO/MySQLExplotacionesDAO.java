@@ -250,21 +250,22 @@ public class MySQLExplotacionesDAO implements IExplotacionesDAO {
     }
 
     @Override
-    public void deleteExplotacion(String REGA) {
+    public String deleteExplotacion(String REGA) {
         String sql = "DELETE FROM explotacion WHERE REGA = ?";
         Connection conexion = null;
+        String error = "";
         try {
             conexion = getMySQLConnection();
             conexion.setAutoCommit(false);
             PreparedStatement stm = ConnectionFactory.getMySQLConnection().prepareStatement(sql);
             stm.setString(1, REGA);
-            
             stm.executeUpdate(); 
             
             conexion.commit();
             conexion.close();
         } catch (SQLException ex) {
             MyLogger.doLog(ex, this.getClass(), "fatal");
+            error = "Primero debes eliminar todos los bovinos de la explotacion";
             try {
                 conexion.rollback();
                 conexion.close();
@@ -274,6 +275,7 @@ public class MySQLExplotacionesDAO implements IExplotacionesDAO {
         }  finally {
             ConnectionFactory.closeConnnection();
         }
+        return error;
     }
     
 }
